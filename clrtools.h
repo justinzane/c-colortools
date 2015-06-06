@@ -32,7 +32,7 @@ typedef struct {
     unsigned int width;
     unsigned int height;
     colorspace_t* cs;
-    lhc_t data[];
+    lhc_t* data;
 } img_lhc_t;
 
 typedef struct {

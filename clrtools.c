@@ -18,115 +18,88 @@ void adj_hue_deg (const img_lhc_t* src, img_lhc_t* dst, const float adj_deg) {
         printf ("Output Lhc image was NULL!\n");
         return;
     }
-    float adj;
-    if (adj_deg < 0.0f) {
-        adj = (-1.0f * fmodf (adj_deg, 360.0f)) / (2.0f * M_PI_F);
-    }
-    if (adj_deg >= 360.0f) {
-        adj = fmodf (adj_deg, 360.0f) / (2.0f * M_PI_F);
-    }
+    float adj = M_PI_F * adj_deg / 180.0f;
     dst->cs = src->cs;
     dst->width = src->width;
     dst->height = src->height;
-    void* result = realloc (src->data, sizeof (lhc_t) * dst->width * dst->height);
-    if (result == NULL) {
-        printf ("realloc failed!\n");
-        return;
-    }
     for (unsigned int y = 0; y < src->height; y++) {
         for (unsigned int x = 0; x < src->width; x++) {
-            dst->data[y * dst->width + x].l = src->data[y * src->height + x].l;
-            dst->data[y * dst->width + x].h = src->data[y * src->height + x].h + adj;
-            if (dst->data[y * dst->width + x].h >= (2.0f * M_PI_F)) {
-                dst->data[y * dst->width + x].h -= (2.0f * M_PI_F);
-            } else if (dst->data[y * dst->width + x].h < 0.0f) {
-                dst->data[y * dst->width + x].h -= (2.0f * M_PI_F);
-            }
-            dst->data[y * dst->width + x].l = src->data[y * src->height + x].l;
-            dst->data[y * dst->width + x].l = src->data[y * src->height + x].l;
+            dst->data[y * dst->width + x].l = src->data[y * src->width + x].l;
+            dst->data[y * dst->width + x].h = src->data[y * src->width + x].h + adj;
+            dst->data[y * dst->width + x].c = src->data[y * src->width + x].c;
+            dst->data[y * dst->width + x].a = src->data[y * src->width + x].a;
         }
     }
     return;
 }
 
 void img_lab2lhc (const img_lab_t* labimg, img_lhc_t* lhcimg) {
-    if (labimg == NULL) {
-        printf ("Input Lab image was NULL!\n");
+    if ((labimg == NULL) || (labimg->data == NULL) || (lhcimg == NULL) ||
+        (lhcimg->data == NULL)) {
+        printf ("Input.output image was NULL!\n");
         return;
-    }
-    if (lhcimg == NULL) {
-        lhcimg = malloc (sizeof (img_lhc_t));
     }
     lhcimg->cs = labimg->cs;
     lhcimg->height = labimg->height;
     lhcimg->width = labimg->width;
-    void* result = realloc (lhcimg->data, sizeof (xyz_t) * labimg->width * labimg->height);
-    if (result == NULL) {
-        printf ("realloc failed!\n");
-        return;
-    }
     for (unsigned int y = 0; y < labimg->height; y++) {
         for (unsigned int x = 0; x < labimg->width; x++) {
-            lhcimg->data[(y * labimg->width) + x] =
-                lab2lhc (labimg->data[(y * labimg->width) + x]);
+            lab2lhc (&(labimg->data[(y * labimg->width) + x]),
+                     &(lhcimg->data[(y * labimg->width) + x]));
         }
     }
     return;
 }
 
 void img_lab2xyz (const img_lab_t* labimg, img_xyz_t* xyzimg) {
-    if (labimg == NULL) {
-        printf ("Input Lab image was NULL!\n");
+    if ((labimg == NULL) || (labimg->data == NULL) || (xyzimg == NULL) ||
+        (xyzimg->data == NULL)) {
+        printf ("Input/output image was NULL!\n");
         return;
-    }
-    if (xyzimg == NULL) {
-        xyzimg = malloc (sizeof (img_xyz_t));
     }
     xyzimg->cs = labimg->cs;
     xyzimg->height = labimg->height;
     xyzimg->width = labimg->width;
-    void* result = realloc (xyzimg->data, sizeof (xyz_t) * labimg->width * labimg->height);
-    if (result == NULL) {
-        printf ("realloc failed!\n");
-        return;
-    }
     for (unsigned int y = 0; y < labimg->height; y++) {
         for (unsigned int x = 0; x < labimg->width; x++) {
-            xyzimg->data[(y * labimg->width) + x] =
-                lab2xyz (labimg->data[(y * labimg->width) + x], labimg->cs);
+            lab2xyz (&(labimg->data[(y * labimg->width) + x]), labimg->cs,
+                     &(xyzimg->data[(y * labimg->width) + x]));
         }
     }
 }
 
 void img_lhc2lab (const img_lhc_t* lhcimg, img_lab_t* labimg) {
-    if (lhcimg == NULL) {
-        printf ("Input Lhc image was NULL!\n");
+    if ((lhcimg == NULL) || (lhcimg->data == NULL) || (labimg == NULL) ||
+        (labimg->data == NULL)) {
+        printf ("Input/output image null!\n");
         return;
-    }
-    if (labimg == NULL) {
-        labimg = malloc (sizeof (img_lab_t));
     }
     labimg->cs = lhcimg->cs;
     labimg->height = lhcimg->height;
     labimg->width = lhcimg->width;
-    void* result = realloc (labimg->data, sizeof (xyz_t) * lhcimg->width * lhcimg->height);
-    if (result == NULL) {
-        printf ("realloc failed!\n");
-        return;
-    }
     for (unsigned int y = 0; y < lhcimg->height; y++) {
         for (unsigned int x = 0; x < lhcimg->width; x++) {
-            labimg->data[(y * lhcimg->width) + x] =
-                lhc2lab (lhcimg->data[(y * lhcimg->width) + x]);
+            lhc2lab (&(lhcimg->data[(y * lhcimg->width) + x]),
+                     &(labimg->data[(y * lhcimg->width) + x]));
         }
     }
 }
 
 void img_lhc2rgb (const img_lhc_t* lhcimg, img_rgbf_t* rgbimg) {
     img_lab_t lab;
+    lab.cs = lhcimg->cs;
+    lab.height = lhcimg->height;
+    lab.width = lhcimg->width;
+    lab.data = malloc (sizeof (lab_t) * lhcimg->width * lhcimg->height);
     img_lhc2lab (lhcimg, &lab);
+
     img_xyz_t xyz;
+    xyz.cs = lab.cs;
+    xyz.width = lab.width;
+    xyz.height = lab.height;
+    xyz.data = malloc (sizeof (xyz_t) * xyz.width * xyz.height);
     img_lab2xyz (&lab, &xyz);
+
     free (lab.data);
     img_xyz2rgb (&xyz, rgbimg);
     free (xyz.data);
@@ -153,25 +126,35 @@ void img_rgbf2rgb8 (const img_rgbf_t* fltimg, img_rgb8_t* intimg) {
         printf ("Input image NULL!\n");
         return;
     }
-    if (intimg == NULL) {
-        intimg = malloc (sizeof (img_rgb8_t));
-    }
     intimg->cs = fltimg->cs;
     intimg->width = fltimg->width;
     intimg->height = fltimg->height;
-    rgb8_t* result = realloc (intimg->data, sizeof (rgb8_t) * intimg->width * intimg->height);
-    if (result == NULL) {
-        printf ("realloc failed!\n");
-        return;
-    }
     for (unsigned int y = 0; y < fltimg->height; y++) {
-        for (unsigned int x = 0; x < fltimg->height; x++) {
-            intimg->data[y * intimg->width + x].r =
-                (uint8_t)(fltimg->data[y * fltimg->width + x].r + 0.5f);
-            intimg->data[y * intimg->width + x].g =
-                (uint8_t)(fltimg->data[y * fltimg->width + x].g + 0.5f);
-            intimg->data[y * intimg->width + x].b =
-                (uint8_t)(fltimg->data[y * fltimg->width + x].b + 0.5f);
+        for (unsigned int x = 0; x < fltimg->width; x++) {
+            if (fltimg->data[y * fltimg->width + x].r <= 0.0f) {
+                intimg->data[y * intimg->width + x].r = 0;
+            } else if (fltimg->data[y * fltimg->width + x].r >= 1.0f) {
+                intimg->data[y * intimg->width + x].r = 255;
+            } else {
+                intimg->data[y * intimg->width + x].r =
+                    (uint8_t)(255.0f * fltimg->data[y * fltimg->width + x].r);
+            }
+            if (fltimg->data[y * fltimg->width + x].g <= 0.0f) {
+                intimg->data[y * intimg->width + x].g = 0;
+            } else if (fltimg->data[y * fltimg->width + x].g >= 1.0f) {
+                intimg->data[y * intimg->width + x].g = 255;
+            } else {
+                intimg->data[y * intimg->width + x].g =
+                    (uint8_t)(255.0f * fltimg->data[y * fltimg->width + x].g);
+            }
+            if (fltimg->data[y * fltimg->width + x].b <= 0.0f) {
+                intimg->data[y * intimg->width + x].b = 0;
+            } else if (fltimg->data[y * fltimg->width + x].b >= 1.0f) {
+                intimg->data[y * intimg->width + x].b = 255;
+            } else {
+                intimg->data[y * intimg->width + x].b =
+                    (uint8_t)(255.0f * fltimg->data[y * fltimg->width + x].b);
+            }
         }
     }
 }
@@ -239,17 +222,9 @@ void img_rgbf2rgba16 (const img_rgbf_t* fltimg, img_rgba16_t* intimg) {
         printf ("Input image NULL!\n");
         return;
     }
-    if (intimg == NULL) {
-        intimg = malloc (sizeof (img_rgba16_t));
-    }
     intimg->cs = fltimg->cs;
     intimg->width = fltimg->width;
     intimg->height = fltimg->height;
-    rgb8_t* result = realloc (intimg->data, sizeof (rgba16_t) * intimg->width * intimg->height);
-    if (result == NULL) {
-        printf ("realloc failed!\n");
-        return;
-    }
     for (unsigned int y = 0; y < fltimg->height; y++) {
         for (unsigned int x = 0; x < fltimg->height; x++) {
             intimg->data[y * intimg->width + x].r =
@@ -286,18 +261,8 @@ void img_rgba162lhc (const img_rgba16_t* rgbimg, img_lhc_t* lhcimg) {
 }
 
 void img_rgb82rgbf (const img_rgb8_t* rgb8, img_rgbf_t* rgbf) {
-    if (rgb8 == NULL) {
-        printf ("Input img null!\n");
-    }
-    if (rgbf == NULL) {
-        rgbf = malloc (sizeof (img_rgbf_t));
-    }
-    rgbf->cs = rgb8->cs;
-    rgbf->width = rgb8->width;
-    rgbf->height = rgb8->height;
-    void* result = realloc (rgbf->data, sizeof (float) * rgbf->width * rgbf->height);
-    if (result == NULL) {
-        printf ("realloc failed!\n");
+    if ((rgb8 == NULL) || (rgb8->data == NULL) || (rgbf == NULL) || (rgbf->data == NULL)) {
+        printf ("Input/output img null!\n");
     }
     for (unsigned int y = 0; y < rgbf->height; y++) {
         for (unsigned int x = 0; x < rgbf->width; x++) {
@@ -326,26 +291,18 @@ void img_rgba162rgbf (const img_rgb8_t* rgba16, img_rgbf_t* rgbf) {
 }
 
 void img_rgb2xyz (const img_rgbf_t* rgbimg, img_xyz_t* xyzimg) {
-    if (rgbimg == NULL) {
+    if ((rgbimg == NULL) || (rgbimg->data == NULL) || (xyzimg == NULL) ||
+        (xyzimg->data == NULL)) {
         printf ("Input RGB image was NULL!\n");
         return;
-    } else {
-        // DEBUGGING
-        printf ("rgbimg = {cs.id: %d, w: %ud, h: %ud, data: %f %f %f\n", rgbimg->cs->id,
-                rgbimg->width, rgbimg->height, rgbimg->data[0].r, rgbimg->data[0].g,
-                rgbimg->data[0].b);
-    }
-    if (xyzimg == NULL) {
-        xyzimg = malloc (sizeof (img_xyz_t));
-        xyzimg->data = malloc (sizeof (xyz_t) * rgbimg->width * rgbimg->height);
     }
     xyzimg->cs = rgbimg->cs;
     xyzimg->height = rgbimg->height;
     xyzimg->width = rgbimg->width;
     for (unsigned int y = 0; y < rgbimg->height; y++) {
         for (unsigned int x = 0; x < rgbimg->width; x++) {
-            xyzimg->data[(y * rgbimg->width) + x] =
-                rgbf2xvz (rgbimg->data[(y * rgbimg->width) + x], rgbimg->cs);
+            rgbf2xvz (&(rgbimg->data[(y * rgbimg->width) + x]), rgbimg->cs,
+                      &(xyzimg->data[(y * rgbimg->width) + x]));
         }
     }
 }
@@ -355,21 +312,13 @@ void img_xyz2lab (const img_xyz_t* xyzimg, img_lab_t* labimg) {
         printf ("Input Lab image was NULL!\n");
         return;
     }
-    if (labimg == NULL) {
-        labimg = malloc (sizeof (img_lab_t));
-    }
     labimg->cs = xyzimg->cs;
     labimg->height = xyzimg->height;
     labimg->width = xyzimg->width;
-    void* result = realloc (labimg->data, sizeof (lab_t) * xyzimg->width * xyzimg->height);
-    if (result == NULL) {
-        printf ("realloc failed!\n");
-        return;
-    }
     for (unsigned int y = 0; y < xyzimg->height; y++) {
         for (unsigned int x = 0; x < xyzimg->width; x++) {
-            labimg->data[(y * xyzimg->width) + x] =
-                xyz2lab (xyzimg->data[(y * xyzimg->width) + x], xyzimg->cs);
+            xyz2lab (&(xyzimg->data[(y * xyzimg->width) + x]), xyzimg->cs,
+                     &(labimg->data[(y * xyzimg->width) + x]));
         }
     }
 }
@@ -386,16 +335,10 @@ void img_xyz2rgb (const img_xyz_t* xyzimg, img_rgbf_t* rgbimg) {
     rgbimg->cs = xyzimg->cs;
     rgbimg->height = xyzimg->height;
     rgbimg->width = xyzimg->width;
-    void* result = realloc (rgbimg->data, sizeof (rgbf_t) * xyzimg->width * xyzimg->height);
-    if (result == NULL) {
-        printf ("realloc failed!\n");
-        return;
-    }
     for (unsigned int y = 0; y < xyzimg->height; y++) {
         for (unsigned int x = 0; x < xyzimg->width; x++) {
-            /** @todo: Implement colorspace handling up the call chain. */
-            rgbimg->data[(y * xyzimg->width) + x] =
-                xyz2rgbf (xyzimg->data[(y * xyzimg->width) + x], xyzimg->cs);
+            xyz2rgbf (&(xyzimg->data[(y * xyzimg->width) + x]), xyzimg->cs,
+                      &(rgbimg->data[(y * xyzimg->width) + x]));
         }
     }
 }

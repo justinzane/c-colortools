@@ -112,49 +112,50 @@ typedef struct {
 /**
  * @brief Convert a CIE Lab pixel to CIE Lhc space.
  * @param [in] lab  The Lab pixel.
- * @return          The Lhc pixel.
+ * @param [out] ret The Lhc pixel.
  * @note See http://www.brucelindbloom.com/index.html?Equations.html .
  */
-lhc_t lab2lhc (const lab_t lab);
+void lab2lhc (const lab_t* lab, lhc_t* ret);
 
 /**
  * @brief Convert a CIE Lhc pixel to a CIE Lab space.
  * @param [in] lhc  The Lhc pixel.
- * @return          The Lab pixel.
+ * @param [out] ret The Lab pixel.
  * @note  See http://www.brucelindbloom.com/index.html?Equations.html .
  */
-lab_t lhc2lab (const lhc_t lhc);
+void lhc2lab (const lhc_t* lhc, lab_t* ret);
 
 /**
  * @brief Convert a CIE Lab pixel to CIE XYZ space.
  * @param [in] lab  The pixel in Lab space.
- * @return          The pixel in XYZ space.
+ * @param [out] ret The pixel in XYZ space.
  */
-xyz_t lab2xyz (const lab_t lab, const colorspace_t* cs);
+void lab2xyz (const lab_t* lab, const colorspace_t* cs, xyz_t* ret);
 
 /**
  * @brief           Conversion to RGB from CIE XYZ space
  * @param [in] xyz  The XYZ pixel.
  * @param [in] cs   The RGB variant desired.
- * @return          The RGB pixel.
+ * @param [out] ret The RGB pixel.
  * @note: See http://www.brucelindbloom.com/Eqn_RGB_XYZ_Matrix.html .
  */
-xyz_t rgbf2xvz (const rgbf_t rgb, const colorspace_t* cs);
+void rgbf2xvz (const rgbf_t* rgb, const colorspace_t* cs, xyz_t* ret);
+
 /**
  * @brief           Conversion to RGB from CIE XYZ space
  * @param [in] xyz  The XYZ pixel.
  * @param [in] cs   The RGB variant desired.
- * @return          The RGB pixel.
+ * @param [out] ret The RGB pixel.
  * @note: See http://www.brucelindbloom.com/Eqn_RGB_XYZ_Matrix.html .
  */
-rgbf_t xyz2rgbf (const xyz_t xyz, const colorspace_t* cs);
+void xyz2rgbf (const xyz_t* xyz, const colorspace_t* cs, rgbf_t* ret);
 
 /**
  * @brief Convert a CIE XYZ pixel to CIE Lab space, assuming a D50 illuminant.
  * @param [in] xyz  The pixel in XYZ space.
- * @return          The pixel in Lab space.
+ * @param [out] ret The pixel in Lab space.
  * @note: See http://www.brucelindbloom.com/index.html?Eqn_XYZ_to_Lab.html .
  */
-lab_t xyz2lab (const xyz_t xyz, const colorspace_t* cs);
+void xyz2lab (const xyz_t* xyz, const colorspace_t* cs, lab_t* ret);
 
 #endif

@@ -111,7 +111,6 @@ end:
 }
 
 void get_data_8 (const char* line, size_t* counter, uint8_t* subpix, rgb8_t* data) {
-    /* max uint16_t is 255 -- 3 decimal digits, hence length of tmp array. */
     char tmp_str[3];
     int digits = 0;
 
@@ -127,16 +126,8 @@ void get_data_8 (const char* line, size_t* counter, uint8_t* subpix, rgb8_t* dat
             case '7':
             case '8':
             case '9':
-                if ((i % 3) == 0) {
-                    tmp_str[0] = line[i];
-                    digits++;
-                } else if ((i % 3) == 1) {
-                    tmp_str[1] = line[i];
-                    digits++;
-                } else {
-                    tmp_str[2] = line[i];
-                    digits++;
-                }
+                tmp_str[digits] = line[i];
+                digits++;
                 break;
             case ' ':
             case '\n':
@@ -251,37 +242,28 @@ int save_file_rgb (const ppm_t img, const char* dst_file) {
     fprintf (dst, "%s\n", img.magic_num);
     fprintf (dst, "%d %d\n", img.img->width, img.img->height);
     fprintf (dst, "%d\n", img.max_val);
-    fprintf (dst, "%s\n", img.comments);
-    int line_len = 0;
-    int subpix_sz = 0;
-    char* tmp = NULL;
-
-    if (img.max_val < 256) {
-        subpix_sz = sizeof (uint8_t);
-    } else {
-        subpix_sz = sizeof (uint16_t);
+    if (img.comments != NULL) {
+        fprintf (dst, "%s\n", img.comments);
     }
+    int line_len = 0;
+    char* tmp = malloc (12 * sizeof (uint8_t));
+
     for (int y = 0; y < img.img->height; y++) {
         for (int x = 0; x < img.img->width; x++) {
-            for (int rgb = 0; rgb < 3; rgb++) {
-                sprintf (tmp, "%d",
-                         ((uint8_t*)img.img
-                              ->data)[((y * img.img->width * 3) + (x * 3) + rgb) * subpix_sz]);
-                if (tmp == NULL) {
-                    printf ("%s:%d tmp was NULL!\n", __FILE__, __LINE__);
-                    goto failure;
-                }
-                line_len += strlen (tmp) + 1;
-                if (line_len >= 75) {
-                    fprintf (dst, "%s\n", tmp);
-                    line_len = 0;
-                } else {
-                    fprintf (dst, "%s ", tmp);
-                }
-            } // rgb
-        }     // x
-    }         // y
-              // success:
+            snprintf (tmp, 12 * sizeof (uint8_t), "%" PRIu8 " %" PRIu8 " %" PRIu8,
+                      img.img->data[y * img.img->width + x].r,
+                      img.img->data[y * img.img->width + x].g,
+                      img.img->data[y * img.img->width + x].b);
+            line_len += strlen (tmp) + 1;
+            if (line_len > 68) {
+                fprintf (dst, "%s\n", tmp);
+                line_len = 0;
+            } else {
+                fprintf (dst, "%s ", tmp);
+            }
+        } // x
+    }     // y
+          // success:
     if (dst != NULL) {
         fclose (dst);
     }
