@@ -73,7 +73,8 @@ int get_max_val (const char* line);
  *        with 8 bit subpixels (24 bit pixels).
  * @param line [in]         The line of text to be processed; should not contain any
  *                          text besides image data.
- * @param counter [in,out]  Tracks the current subpixel between lines.
+ * @param counter [in,out]  Tracks the current pixel between lines.
+ * @param subpix [in,out]   Tracks the current subpixel between lines.
  * @param data [out]        The binary image data.
  */
 void get_data_8 (const char* line, size_t* counter, uint8_t* subpix, rgb8_t* data);
@@ -81,7 +82,7 @@ void get_data_8 (const char* line, size_t* counter, uint8_t* subpix, rgb8_t* dat
 /**
  * @brief Loads and parses a PPM ASCII image file.
  * @param [in] src_file The "/path/file" ASCII PPM file to be loaded.
- * @return              The parsed PPM image.
+ * @param [out] src_img The PPM struct into which to place the parsed PPM image.
  */
 void load_file (const char* src_file, ppm_t* src_img);
 

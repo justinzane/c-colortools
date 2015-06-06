@@ -17,16 +17,19 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-/** @def Constant for Lab from XYZ conversion; see
+/** @brief Constant for Lab from XYZ conversion; see
  * (http://www.brucelindbloom.com/index.html?Eqn_XYZ_to_Lab.html). */
 #define LAB_ETA 0.008856452f
-/** @def Constant for Lab from XYZ conversion; see
+
+/** @brief Constant for Lab from XYZ conversion; see
  * (http://www.brucelindbloom.com/index.html?Eqn_XYZ_to_Lab.html). */
 #define LAB_KAPPA 903.2963f
-/** @def Constant for Lab from XYZ conversion; see
+
+/** @brief Constant for Lab from XYZ conversion; see
  * (http://www.brucelindbloom.com/index.html?Eqn_XYZ_to_Lab.html). */
 #define LAB_LAMBDA 7.787f
-/** @def Constant for Lab from XYZ conversion; see
+
+/** @brief Constant for Lab from XYZ conversion; see
  * (http://www.brucelindbloom.com/index.html?Eqn_XYZ_to_Lab.html). */
 #define LAB_MU 0.1379310f
 
@@ -128,15 +131,16 @@ void lhc2lab (const lhc_t* lhc, lab_t* ret);
 /**
  * @brief Convert a CIE Lab pixel to CIE XYZ space.
  * @param [in] lab  The pixel in Lab space.
+ * @param [in] cs   The RGB variant desired.
  * @param [out] ret The pixel in XYZ space.
  */
 void lab2xyz (const lab_t* lab, const colorspace_t* cs, xyz_t* ret);
 
 /**
  * @brief           Conversion to RGB from CIE XYZ space
- * @param [in] xyz  The XYZ pixel.
+ * @param [in] rgb  The RGB pixel.
  * @param [in] cs   The RGB variant desired.
- * @param [out] ret The RGB pixel.
+ * @param [out] ret The XYZ pixel.
  * @note: See http://www.brucelindbloom.com/Eqn_RGB_XYZ_Matrix.html .
  */
 void rgbf2xvz (const rgbf_t* rgb, const colorspace_t* cs, xyz_t* ret);
@@ -153,6 +157,7 @@ void xyz2rgbf (const xyz_t* xyz, const colorspace_t* cs, rgbf_t* ret);
 /**
  * @brief Convert a CIE XYZ pixel to CIE Lab space, assuming a D50 illuminant.
  * @param [in] xyz  The pixel in XYZ space.
+ * @param [in] cs   The RGB variant desired.
  * @param [out] ret The pixel in Lab space.
  * @note: See http://www.brucelindbloom.com/index.html?Eqn_XYZ_to_Lab.html .
  */

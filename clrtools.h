@@ -92,7 +92,7 @@ typedef struct {
 
 /**
  * @brief Adjusts the hue of an image by the given angle.
- * @description
+ * @details
  * The hue of a pixel is based on 0 degrees being red, 120 being green and
  * 240 being blue. Therefore a pixel with an initial hue of 60 degrees (yellow)
  * that is shifted by 240 degrees ends up being purple. This is done in CIE
