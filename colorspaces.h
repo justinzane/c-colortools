@@ -12,12 +12,13 @@
 #ifndef JZ_COLORSPACES_H
 #define JZ_COLORSPACES_H
 
+/** @brief RGB colorspace structure. */
 typedef struct {
-    unsigned int id;
-    float whitepoint_temp;
-    float whitepoint_xyz[3];
-    float rgb2xyz_m[9];
-    float xyz2rgb_m[9];
+    unsigned int id;         /**< Unique identifier. @deprecated */
+    float whitepoint_temp;   /**< Whitepoint temperature in Kelvin. @deprecated */
+    float whitepoint_xyz[3]; /**< Whitepoint CIE XYZ coordinates. */
+    float rgb2xyz_m[9];      /**< RGB to XYZ conversion matrix[3][3]. */
+    float xyz2rgb_m[9];      /**< XYZ to RGB conversion matrix[3][3]. */
 } colorspace_t;
 
 static const colorspace_t UNREAL_RGB = {1,

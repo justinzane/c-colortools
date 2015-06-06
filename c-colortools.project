@@ -28,7 +28,6 @@
     <File Name="colorspaces.h"/>
     <File Name="pixels.h"/>
     <File Name="pixels.c"/>
-    <File Name="colorspaces.c"/>
     <File Name="defines.h"/>
   </VirtualDirectory>
   <Settings Type="Executable">

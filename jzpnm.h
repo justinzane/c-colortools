@@ -48,14 +48,15 @@ char* get_magic_num (const char* line);
  */
 char* get_comments (const char* line);
 
+/** @brief Silly convenience struct. @deprecated. */
 typedef struct {
-    unsigned int width;
-    unsigned int height;
+    unsigned int width;  /**< Width. */
+    unsigned int height; /**< Height */
 } dimensions;
 
 /**
  * @brief WRITEME
- * @param line
+ * @param [in] line Input text.
  * @return
  */
 dimensions* get_dimensions (const char* line);

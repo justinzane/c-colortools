@@ -27,61 +27,76 @@
 /*
  * Image Type Definitions *****************************************************
  */
-
+/** @brief CIE Lhc / Lch image */
 typedef struct {
-    unsigned int width;
-    unsigned int height;
-    colorspace_t* cs;
-    lhc_t* data;
+    unsigned int width;  /**< Image width */
+    unsigned int height; /**< Image height */
+    colorspace_t* cs;    /**< Image RGB specific colorspace. Used when converting from/to
+                              one of the CIE spaces and RGB. */
+    lhc_t* data;         /**< The actual pixels of image data. */
 } img_lhc_t;
 
+/** @brief CIE Lab image. */
 typedef struct {
-    unsigned int width;
-    unsigned int height;
-    colorspace_t* cs;
-    lab_t* data;
+    unsigned int width;  /**< Image width */
+    unsigned int height; /**< Image height */
+    colorspace_t* cs;    /**< Image RGB specific colorspace. Used when converting from/to
+                             one of the CIE spaces and RGB. */
+    lab_t* data;         /**< The actual pixels of image data. */
 } img_lab_t;
 
+/** @brief CIE XYZ image. */
 typedef struct {
-    unsigned int width;
-    unsigned int height;
-    colorspace_t* cs;
-    xyz_t* data;
+    unsigned int width;  /**< Image width */
+    unsigned int height; /**< Image height */
+    colorspace_t* cs;    /**< Image RGB specific colorspace. Used when converting from/to
+                              one of the CIE spaces and RGB. */
+    xyz_t* data;         /**< The actual pixels of image data. */
 } img_xyz_t;
 
+/** @brief RGBA float image. */
 typedef struct {
-    unsigned int width;
-    unsigned int height;
-    colorspace_t* cs;
-    rgbf_t* data;
+    unsigned int width;  /**< Image width */
+    unsigned int height; /**< Image height */
+    colorspace_t* cs;    /**< Image RGB specific colorspace. Used when converting from/to
+                              one of the CIE spaces and RGB. */
+    rgbf_t* data;        /**< The actual pixels of image data. */
 } img_rgbf_t;
 
+/** @brief RGB 24 bit image. */
 typedef struct {
-    unsigned int width;
-    unsigned int height;
-    colorspace_t* cs;
-    rgb8_t* data;
+    unsigned int width;  /**< Image width */
+    unsigned int height; /**< Image height */
+    colorspace_t* cs;    /**< Image RGB specific colorspace. Used when converting from/to
+                              one of the CIE spaces and RGB. */
+    rgb8_t* data;        /**< The actual pixels of image data. */
 } img_rgb8_t;
 
+/** @brief RGBA 32 bit image. */
 typedef struct {
-    unsigned int width;
-    unsigned int height;
-    colorspace_t* cs;
-    rgba8_t* data;
+    unsigned int width;  /**< Image width */
+    unsigned int height; /**< Image height */
+    colorspace_t* cs;    /**< Image RGB specific colorspace. Used when converting from/to
+                              one of the CIE spaces and RGB. */
+    rgba8_t* data;       /**< The actual pixels of image data. */
 } img_rgba8_t;
 
+/** @brief RGB 48 bit image. */
 typedef struct {
-    unsigned int width;
-    unsigned int height;
-    colorspace_t* cs;
-    rgb16_t* data;
+    unsigned int width;  /**< Image width */
+    unsigned int height; /**< Image height */
+    colorspace_t* cs;    /**< Image RGB specific colorspace. Used when converting from/to
+                              one of the CIE spaces and RGB. */
+    rgb16_t* data;       /**< The actual pixels of image data. */
 } img_rgb16_t;
 
+/** @brief RGBA 64 bit image. */
 typedef struct {
-    unsigned int width;
-    unsigned int height;
-    colorspace_t* cs;
-    rgba16_t* data;
+    unsigned int width;  /**< Image width */
+    unsigned int height; /**< Image height */
+    colorspace_t* cs;    /**< Image RGB specific colorspace. Used when converting from/to
+                              one of the CIE spaces and RGB. */
+    rgba16_t* data;      /**< The actual pixels of image data. */
 } img_rgba16_t;
 
 /*
