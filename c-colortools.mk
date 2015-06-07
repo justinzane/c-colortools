@@ -13,7 +13,7 @@ CurrentFileName        :=
 CurrentFilePath        :=
 CurrentFileFullPath    :=
 User                   :=
-Date                   :=06/06/15
+Date                   :=06/07/15
 CodeLitePath           :="/home/justin/.codelite"
 LinkerName             :=/usr/bin/clang++
 SharedObjectLinkerName :=/usr/bin/clang++ -shared -fPIC
@@ -60,7 +60,7 @@ AS       := /usr/bin/llvm-as
 ## User defined environment variables
 ##
 CodeLiteDir:=/usr/share/codelite
-Objects0=$(IntermediateDirectory)/main.c$(ObjectSuffix) $(IntermediateDirectory)/jzpnm.c$(ObjectSuffix) $(IntermediateDirectory)/clrtools.c$(ObjectSuffix) $(IntermediateDirectory)/pixels.c$(ObjectSuffix) $(IntermediateDirectory)/colorspaces.c$(ObjectSuffix) 
+Objects0=$(IntermediateDirectory)/main.c$(ObjectSuffix) $(IntermediateDirectory)/jzpnm.c$(ObjectSuffix) $(IntermediateDirectory)/clrtools.c$(ObjectSuffix) $(IntermediateDirectory)/pixels.c$(ObjectSuffix) 
 
 
 
@@ -118,14 +118,6 @@ $(IntermediateDirectory)/pixels.c$(DependSuffix): pixels.c
 
 $(IntermediateDirectory)/pixels.c$(PreprocessSuffix): pixels.c
 	@$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/pixels.c$(PreprocessSuffix) "pixels.c"
-
-$(IntermediateDirectory)/colorspaces.c$(ObjectSuffix): colorspaces.c $(IntermediateDirectory)/colorspaces.c$(DependSuffix)
-	$(CC) $(SourceSwitch) "/home/justin/src/c-colortools/colorspaces.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/colorspaces.c$(ObjectSuffix) $(IncludePath)
-$(IntermediateDirectory)/colorspaces.c$(DependSuffix): colorspaces.c
-	@$(CC) $(CFLAGS) $(IncludePath) -MG -MP -MT$(IntermediateDirectory)/colorspaces.c$(ObjectSuffix) -MF$(IntermediateDirectory)/colorspaces.c$(DependSuffix) -MM "colorspaces.c"
-
-$(IntermediateDirectory)/colorspaces.c$(PreprocessSuffix): colorspaces.c
-	@$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/colorspaces.c$(PreprocessSuffix) "colorspaces.c"
 
 
 -include $(IntermediateDirectory)/*$(DependSuffix)
